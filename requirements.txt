@@ -1,0 +1,7 @@
+pandas
+faker
+scikit-learn
+sqlalchemy
+pyodbc
+streamlit
+plotly
