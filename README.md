@@ -25,5 +25,17 @@ Este projeto tem como objetivo simular, analisar e visualizar dados de fretes ro
 3. Rode o script `etl/insert_data.py` para carregar os dados simulados
 4. Execute as análises ou dashboards à sua escolha
 
+## Algumas consultas do BANCO
+1. Quantidade de fretes por UF de origem:
+SELECT UF_origem, COUNT(*) AS quantidade_fretes
+FROM fretes
+GROUP BY UF_origem
+ORDER BY quantidade_fretes DESC;
+
+2. Frete médio por tipo de veículo: 
+SELECT tipo_veiculo, AVG(valor_frete) AS frete_medio
+FROM fretes
+GROUP BY tipo_veiculo;
+
 ## 📌 Status
 Em desenvolvimento 🚧
