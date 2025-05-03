@@ -1,5 +1,13 @@
-import React, { useState} from 'react';
-import './App.css';
+import React, { useState } from 'react';
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Snackbar,
+  Alert
+} from '@mui/material';
+import { motion } from 'framer-motion';
 
 function App() {
   const [formData, setFormData] = useState({
@@ -7,16 +15,21 @@ function App() {
     UF_origem: '',
     UF_destino: '',
     transportadora: '',
-    valor_frete:''
+    valor_frete: ''
   });
 
   const [resultado, setResultado] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setSnackbarOpen(true);
     try {
       const response = await fetch('http://127.0.0.1:8000/predict', {
         method: 'POST',
@@ -30,29 +43,47 @@ function App() {
         })
       });
       const data = await response.json();
-      console.log("Tipo da resposta: ", typeof data);
-      console.log("Resposta da api: ", data);
       setResultado(data.previsao || data.erro);
     } catch (error) {
-        setResultado('Erro ao conectar na api.');
+      setResultado('Erro ao conectar na API.');
+    } finally {
+      setLoading(false);
+      setSnackbarOpen(false);
     }
   };
 
-  return(
-    <div className="App">
-      <h1>Previsão de Atraso de Entrega</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="tipo_veiculo" placeholder="Tipo de Veículo" onChange={handleChange} required />
-        <input type="text" name="UF_origem" placeholder="UF Origem" onChange={handleChange} required />
-        <input type="text" name="UF_destino" placeholder="UF Destino" onChange={handleChange} required />
-        <input type="text" name="transportadora" placeholder="Transportadora" onChange={handleChange} required />
-        <input type="number" name="valor_frete" placeholder="Valor do Frete" onChange={handleChange} required />
-        <button type="submit">Prever</button>
-      </form>
-      {resultado && <p>Resultado: {resultado}</p>}
-    </div>
-  );
+  return (
+    <Container maxWidth="sm" style={{ marginTop: '40px' }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Previsão de Atraso de Entrega
+      </Typography>
 
+      <form onSubmit={handleSubmit}>
+        <TextField label="Tipo de Veículo" name="tipo_veiculo" fullWidth margin="normal" onChange={handleChange} required />
+        <TextField label="UF Origem" name="UF_origem" fullWidth margin="normal" onChange={handleChange} required />
+        <TextField label="UF Destino" name="UF_destino" fullWidth margin="normal" onChange={handleChange} required />
+        <TextField label="Transportadora" name="transportadora" fullWidth margin="normal" onChange={handleChange} required />
+        <TextField label="Valor do Frete" name="valor_frete" type="number" fullWidth margin="normal" onChange={handleChange} required />
+        <Button variant="contained" color="primary" type="submit" fullWidth>
+          Prever
+        </Button>
+      </form>
+
+      {resultado && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <Typography variant="h6" align="center" style={{ marginTop: '30px' }}>
+            Resultado: {resultado}
+          </Typography>
+        </motion.div>
+      )}
+
+      <Snackbar open={snackbarOpen}>
+        <Alert severity="info" sx={{ width: '100%' }}>
+          Processando previsão...
+        </Alert>
+      </Snackbar>
+    </Container>
+  );
 }
 
 export default App;
