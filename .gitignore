@@ -1,3 +1,4 @@
 .env
 etl/__pycache__/db_connection.cpython-313.pyc
 config.json
+upload_model_azure.cpython-313
