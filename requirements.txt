@@ -7,3 +7,6 @@ streamlit
 plotly
 python-dotenv
 seaborn
+plotly
+fastapi
+uvicorn
