@@ -3,8 +3,8 @@ import os;
 
 connect_string = os.getenv('CONNECT_STRING')
 container_name = "modelov1";
-blob_name = "modelo_random_forest.pkl";
-local_file = "ml/modelo_random_forest.pkl";
+blob_name = "modelo_random_forest-v2.pkl";
+local_file = "ml/modelo_random_forest_v2.pkl";
 
 blob_service_client = BlobServiceClient.from_connection_string(connect_string)
 blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name);

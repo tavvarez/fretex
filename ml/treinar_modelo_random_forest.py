@@ -22,9 +22,19 @@ feature = ['tipo_veiculo', 'UF_origem', 'UF_destino', 'transportadora', 'valor_f
 X = df[feature];
 y = df['atraso'];
 
-le = LabelEncoder();
-for col in  ['tipo_veiculo', 'UF_origem', 'UF_destino', 'transportadora']:
-    X[col] = le.fit_transform(X[col]);
+# le = LabelEncoder();
+# for col in  ['tipo_veiculo', 'UF_origem', 'UF_destino', 'transportadora']:
+#     X[col] = le.fit_transform(X[col]);
+le_tipo_veiculo = LabelEncoder();
+le_UF_origem = LabelEncoder();
+le_UF_destino = LabelEncoder();
+le_transportadora = LabelEncoder();
+
+X['tipo_veiculo'] = le_tipo_veiculo.fit_transform(X['tipo_veiculo'])
+X['UF_origem'] = le_UF_origem.fit_transform(X['UF_origem'])
+X['UF_destino'] = le_UF_destino.fit_transform(X['UF_destino'])
+X['transportadora'] = le_transportadora.fit_transform(X['transportadora'])
+
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42);
 model = RandomForestClassifier(n_estimators=100, random_state=42);
@@ -44,5 +54,16 @@ print(confusion_matrix(y_test, y_pred));
 print("classificação")
 print(classification_report(y_test, y_pred));
 
-joblib.dump(model, 'ml/modelo_random_forest.pkl')
-print("\nmodelo salvo")
+joblib.dump({
+    'model': model,
+    'encoder_tipo_veiculo': le_tipo_veiculo,
+    'encoder_UF_origem': le_UF_origem,
+    'encoder_UF_destino': le_UF_destino,
+    'encoder_transportadora': le_transportadora
+}, 'ml/modelo_random_forest_v2.pkl')
+print("\nModelo Salvo")
+
+print("Classes tipo_veiculo:", le_tipo_veiculo.classes_)
+print("Classes UF_origem:", le_UF_origem.classes_)
+print("Classes UF_destino:", le_UF_destino.classes_)
+print("Classes transportadora:", le_transportadora.classes_)
