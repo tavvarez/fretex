@@ -6,26 +6,20 @@ from fastapi.middleware.cors import CORSMiddleware;
 
 app = FastAPI();
 
-model = joblib.load("ml/modelo_random_forest_azure.pkl");
+model_bundle = joblib.load("ml/modelo_random_forest_v2.pkl");
 
-mapeamento_tipo_veiculo = {
-    'truck': 0,
-    'carreta': 1,
-    'vuc': 2                       
-    }
+model = model_bundle['model']
 
-mapeamento_UF = {
-    'SP': 0,
-    'RJ': 1,
-    'MG': 2,
-    'ES': 3
-}
+le_tipo_veiculo = model_bundle['encoder_tipo_veiculo']
+le_UF_origem = model_bundle['encoder_UF_origem']
+le_UF_destino = model_bundle['encoder_UF_destino']
+le_transportadora = model_bundle['encoder_transportadora']
 
-mapeamento_transportadora = {
-    'Transportadora A': 0,
-    'Transportadora B': 1,
-    'Transportadora C': 2,
-}
+mapeamento_tipo_veiculo = {classe: idx for idx, classe in enumerate(le_tipo_veiculo.classes_)}
+mapeamento_UF_origem = {classe: idx for idx, classe in enumerate(le_UF_origem.classes_)}
+mapeamento_UF_destino = {classe: idx for idx, classe in enumerate(le_UF_destino.classes_)}
+mapeamento_transportadora = {classe: idx for idx, classe in enumerate(le_transportadora.classes_)}
+
 
 class FreteInput(BaseModel):
     tipo_veiculo: str
@@ -38,8 +32,8 @@ class FreteInput(BaseModel):
 def predict_frete(frete: FreteInput):
     try:
         tipo_veiculo_cod = mapeamento_tipo_veiculo.get(frete.tipo_veiculo);
-        UF_origem_cod = mapeamento_UF.get(frete.UF_origem);
-        UF_destino_cod = mapeamento_UF.get(frete.UF_destino);
+        UF_origem_cod = mapeamento_UF_origem.get(frete.UF_origem);
+        UF_destino_cod = mapeamento_UF_destino.get(frete.UF_destino);
         transportadora_cod = mapeamento_transportadora.get(frete.transportadora);
 
         if None in [tipo_veiculo_cod, UF_origem_cod, UF_destino_cod, transportadora_cod]:
