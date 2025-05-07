@@ -1,0 +1,13 @@
+pandas
+faker
+scikit-learn
+sqlalchemy
+pyodbc
+streamlit
+plotly
+python-dotenv
+seaborn
+plotly
+fastapi
+uvicorn
+azureml-core

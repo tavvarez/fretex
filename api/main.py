@@ -1,14 +1,20 @@
 from fastapi import FastAPI;
 from pydantic import BaseModel;
 import joblib;
+from azureml.core import Workspace, Model
 import pandas as pd;
 from fastapi.middleware.cors import CORSMiddleware;
+import os;
 
 app = FastAPI();
 
-model_bundle = joblib.load("ml/modelo_random_forest_v2.pkl");
+ws = Workspace.from_config(path="config.json")
 
-model = model_bundle['model']
+model = Model(ws, name="modelo_random_forest-v2")
+
+model_path = model.download(target_dir="/tmp", exist_ok=True)
+
+model_bundle = joblib.load(model_path)
 
 le_tipo_veiculo = model_bundle['encoder_tipo_veiculo']
 le_UF_origem = model_bundle['encoder_UF_origem']
