@@ -10,11 +10,11 @@ app = FastAPI();
 
 ws = Workspace.from_config(path="config.json")
 
-model = Model(ws, name="modelo_random_forest-v3")
+registered_model = Model(ws, name="modelo_random_forest-v3")
 
-model_path = model.download(target_dir="/tmp", exist_ok=True)
-
+model_path = registered_model.download(target_dir="/tmp", exist_ok=True)
 model_bundle = joblib.load(model_path)
+model = model_bundle["model"]
 
 le_tipo_veiculo = model_bundle['encoder_tipo_veiculo']
 le_UF_origem = model_bundle['encoder_UF_origem']
