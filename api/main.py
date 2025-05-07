@@ -10,7 +10,7 @@ app = FastAPI();
 
 ws = Workspace.from_config(path="config.json")
 
-model = Model(ws, name="modelo_random_forest-v2")
+model = Model(ws, name="modelo_random_forest-v3")
 
 model_path = model.download(target_dir="/tmp", exist_ok=True)
 
