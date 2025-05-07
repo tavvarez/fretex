@@ -8,3 +8,5 @@ api/__pycache__/main.cpython-313.pyc
 ml/__pycache__/registrar_modelo_azureml.cpython-313.pyc
 ml/__pycache__/treinar_modelo_random_forest.cpython-313.pyc
 ml/__pycache__/upload_model_azure.cpython-313.pyc
+.vscode/settings.json
+api/.deployment
